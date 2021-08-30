@@ -84,7 +84,7 @@ pub mod pallet {
 			let sender = ensure_signed(origin)?;
 
 			// 对proof key值做长度判断
-			ensure!(claim.len() <= T::ProofHashKeyLimit::get() as usize, Error::<T>::ProofHashLenghtOverFlow);
+			ensure!(claim.len() as u64 <= T::ProofHashKeyLimit::get(), Error::<T>::ProofHashLenghtOverFlow);
 
 			ensure!(!Proofs::<T>::contains_key(&claim), Error::<T>::ProofAlreadyExists);
 
