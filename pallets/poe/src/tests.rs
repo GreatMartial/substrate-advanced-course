@@ -108,7 +108,7 @@ fn transfer_claim_failed_when_not_claim_owner() {
 #[test]
 fn create_claim_works_by_proof_hash_lenght_limit() {
 	new_test_ext().execute_with(|| {
-		let claim = vec![1;1000];
+		let claim = vec![1; ProofHashKeyLimit::get() as usize];
 		assert_ok!(PoeModule::create_claim(Origin::signed(1), claim.clone()));
 		assert_eq!(
 			Proofs::<Test>::get(&claim),
@@ -120,7 +120,7 @@ fn create_claim_works_by_proof_hash_lenght_limit() {
 #[test]
 fn create_claim_failed_when_proof_hash_lenght_overflow () {
 	new_test_ext().execute_with(|| {
-		let claim = vec![1; 1001];
+		let claim = vec![1; (ProofHashKeyLimit::get() + 1) as usize];
 
 		assert_noop!(
 			PoeModule::create_claim(Origin::signed(1), claim.clone()),
