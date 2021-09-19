@@ -12,7 +12,7 @@ mod erc20 {
 
     #[ink(storage)]
     pub struct Erc20 {
-        totla_supply: Lazy<Balance>,
+        total_supply: Lazy<Balance>,
         balances: StorageHashMap<AccountId, Balance>,
         allowances: StorageHashMap<(AccountId, AccountId), Balance>,
     }
@@ -36,7 +36,7 @@ mod erc20 {
     }
 
     #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode)]
-    #[cfg_attr(feature = "std"), derive(scale_info::TypeInfo)]
+    #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
     pub enum Error {
         InsufficientBalance,
         InsufficientAllowance,
@@ -47,19 +47,19 @@ mod erc20 {
     impl Erc20 {
         #[ink(constructor)]
         pub fn new(initial_supply: Balance) -> Self {
-            let caller = self.env().caller;
+            let caller = Self::env().caller();
             let mut balances = StorageHashMap::new();
             balances.insert(caller, initial_supply);
             let instance = Self {
                 total_supply: Lazy::new(initial_supply),
-                balance,
+                balances,
                 allowances: StorageHashMap::new(),
-            }
+            };
             Self::env().emit_event(Transfer {
                 from: None,
                 to: Some(caller),
                 value: initial_supply,
-            })
+            });
             instance
         }
 
@@ -81,19 +81,36 @@ mod erc20 {
 
         #[ink(message)]
         pub fn transfer(&mut self, to: AccountId, value: Balance) -> Result<()> {
-            let from = Self.env().caller;
+            let from = Self::env().caller();
             self.transfer_from_to(from, to, value)
         }
 
         #[ink(message)]
-        pub fn approve(&self, spender: AccountId, value: Balance) -> Result<()> {
-            let owner = Self.env().caller;
+        pub fn approve(&mut self, spender: AccountId, value: Balance) -> Result<()> {
+            let owner = Self::env().caller();
             self.allowances.insert((owner, spender), value);
             self.env().emit_event(Approval {
                 owner,
                 spender,
                 value,
             });
+            Ok(())
+        }
+
+        #[ink(message)]
+        pub fn transfer_from(
+            &mut self,
+            from: AccountId,
+            to: AccountId,
+            value: Balance,
+        ) -> Result<()> {
+            let caller = Self::env().caller();
+            let allowance = self.allowance(from, caller);
+            if allowance < value {
+                return Err(Error::InsufficientAllowance)
+            }
+            self.transfer_from_to(from, to, value)?;
+            self.allowances.insert((from, caller), allowance - value);
             Ok(())
         }
 
