@@ -1,0 +1,10 @@
+{
+    "jsonrpc":"2.0",
+    "id":1,
+    "method":"author_insertKey",
+    "params": [
+        "gran",
+        "deal alley inherit mobile welcome globe fun link skill start cat they",
+        "0xc072b2c00193efcf6dd73164f873cd6fb9ffdafdd42819df5e2cb7c8fa404d49"
+    ]
+}

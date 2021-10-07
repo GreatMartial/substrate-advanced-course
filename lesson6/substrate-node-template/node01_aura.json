@@ -1,0 +1,10 @@
+{
+  "jsonrpc":"2.0",
+  "id":1,
+  "method":"author_insertKey",
+  "params": [
+    "aura",
+    "avoid fiscal stuff nose swift section famous treat blouse mad pitch ladder",
+    "0x46cf644fa3667b6a76190eddddf92af41a09195ee35b1ff2688f516376df8c7b"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+    "jsonrpc":"2.0",
+    "id":1,
+    "method":"author_insertKey",
+    "params": [
+        "gran",
+        "avoid fiscal stuff nose swift section famous treat blouse mad pitch ladder",
+        "0x983aa3ad16c1db5f0cedf29c01e4c15aaf499860eaa55bd611ea92f0db5841f3"
+    ]
+}
